@@ -49,7 +49,7 @@ def listar_remetentes():
             chunk_ids = ids[current_chunk_start:current_chunk_end]
             ids_str = b",".join(chunk_ids)
 
-            print(f"[DEBUG] {datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | Fazendo fetch dos e-mails de {current_chunk_start} até {current_chunk_end - 1}...")
+            print(f"[DEBUG] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | Fazendo fetch dos e-mails de {current_chunk_start} até {current_chunk_end - 1}...")
 
             try:
                 status, response = mail.fetch(ids_str, "(BODY[HEADER.FIELDS (FROM)])")
