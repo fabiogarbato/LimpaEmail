@@ -30,6 +30,7 @@ def listar_remetentes():
 
         ids = message_numbers[0].split()
         total_ids = len(ids)
+        total_ids = 50000
         print(f"Total de e-mails encontrados na INBOX: {total_ids}")
 
         remetentes_dict = {}
@@ -90,8 +91,8 @@ def listar_remetentes():
             print("[DEBUG] Nenhum remetente encontrado.")
             return
 
-        print("\nTop 5 remetentes com mais e-mails:")
-        for i, (rem, qtde) in enumerate(remetentes_ordenados[:5], start=1):
+        print("\nTop 500 remetentes com mais e-mails:")
+        for i, (rem, qtde) in enumerate(remetentes_ordenados[:500], start=1):
             print(f"{i}. {rem} - {qtde} e-mail(s)")
     except Exception as e:
         print(f"[DEBUG] Ocorreu um erro ao listar remetentes: {e}")
