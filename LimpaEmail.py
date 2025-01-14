@@ -41,7 +41,6 @@ def listar_remetentes():
             return
 
         current_chunk_start = 0
-
         while current_chunk_start < total_ids:
             current_chunk_end = min(current_chunk_start + CHUNK_SIZE, total_ids)
             chunk_ids = ids[current_chunk_start:current_chunk_end]
@@ -164,7 +163,7 @@ def main():
             break
         else:
             print("Opção inválida. Tente novamente.")
-        print("\n")
+        print()
 
 if __name__ == "__main__":
     main()
