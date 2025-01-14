@@ -2,6 +2,7 @@ import configparser
 import imaplib
 import email
 from email.header import decode_header
+from datetime import datetime
 
 CHUNK_SIZE = 500
 
@@ -30,9 +31,9 @@ def listar_remetentes():
 
         ids = message_numbers[0].split()
         total_ids = len(ids)
-        total_ids = 50000
         print(f"Total de e-mails encontrados na INBOX: {total_ids}")
-
+        # total_ids = 100000
+        print(f"Total de e-mails a serem processados: {total_ids}")
         remetentes_dict = {}
 
         if total_ids == 0:
@@ -48,7 +49,7 @@ def listar_remetentes():
             chunk_ids = ids[current_chunk_start:current_chunk_end]
             ids_str = b",".join(chunk_ids)
 
-            print(f"[DEBUG] Fazendo fetch dos e-mails de {current_chunk_start} até {current_chunk_end - 1}...")
+            print(f"[DEBUG] {datetime.now().strftime("%Y-%m-%d %H:%M:%S")} | Fazendo fetch dos e-mails de {current_chunk_start} até {current_chunk_end - 1}...")
 
             try:
                 status, response = mail.fetch(ids_str, "(BODY[HEADER.FIELDS (FROM)])")
