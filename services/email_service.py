@@ -93,26 +93,24 @@ def listar_remetentes():
         }
 
 def limpar_emails(remetentes=None):
-    try:
-        config = configparser.ConfigParser()
-        config.read("config.ini")
-
-        IMAP_SERVER = config["Email"]["IMAP_SERVER"]
-        EMAIL_USER = config["Email"]["EMAIL_USER"]
-        EMAIL_PASS = config["Email"]["EMAIL_PASS"]
-
-        if remetentes is None:
-            remetentes = config["Email"]["REMETENTES"].split(",")
-
-        mail = imaplib.IMAP4_SSL(IMAP_SERVER, timeout=TIMEOUT)
-        mail.login(EMAIL_USER, EMAIL_PASS)
-        mail.select("INBOX")
-
-        for remetente in remetentes:
-            remetente = remetente.strip()
-            status, message_numbers = mail.search(None, f'(FROM "{remetente}")')
-            if status == "OK":
-                ids = message_numbers[0].split()
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    IMAP_SERVER = config["Email"]["IMAP_SERVER"]
+    EMAIL_USER = config["Email"]["EMAIL_USER"]
+    EMAIL_PASS = config["Email"]["EMAIL_PASS"]
+    if remetentes is None:
+        remetentes = config["Email"]["REMETENTES"].split(",")
+    mail = imaplib.IMAP4_SSL(IMAP_SERVER, timeout=TIMEOUT)
+    mail.login(EMAIL_USER, EMAIL_PASS)
+    mail.select("INBOX")
+    encontrou_emails = False
+    for remetente in remetentes:
+        remetente = remetente.strip()
+        status, message_numbers = mail.search(None, f'(FROM "{remetente}")')
+        if status == "OK":
+            ids = message_numbers[0].split()
+            if ids:
+                encontrou_emails = True
                 for msg_id in ids:
                     try:
                         mail.store(msg_id, "+FLAGS", "\\Deleted")
@@ -122,12 +120,9 @@ def limpar_emails(remetentes=None):
                     mail.expunge()
                 except:
                     pass
-
-        mail.close()
-        mail.logout()
+    mail.close()
+    mail.logout()
+    if encontrou_emails:
         return {"status": "ok", "mensagem": "E-mails apagados com sucesso!"}
-    except Exception as e:
-        return {
-            "status": "erro",
-            "mensagem": f"Ocorreu um erro ao limpar e-mails: {e}"
-        }
+    else:
+        return {"status": "ok", "mensagem": "Nenhum e-mail para apagar, mas operação concluída com sucesso."}
